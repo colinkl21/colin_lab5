@@ -134,7 +134,7 @@ dn_lq_ak_mindist <- dn_lq_ak %>%
 library(ggsci)
 
 ggplot(data = dn_lq_ak_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are three different La Quinta within 6 miles of three different Denny's") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 3 Denny's-La Quinta pairings within 6 miles") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -158,3 +158,125 @@ summary(dn_lq_ak_mindist)
     ##                     Max.   :5.998
 
 ### Exercise 9
+
+``` r
+dn_nc <- dennys %>%
+  filter(state == "NC")
+
+lq_nc <- laquinta %>%
+  filter(state == "NC")
+
+dn_lq_nc <- full_join(dn_nc, lq_nc, by = "state")
+dn_lq_nc
+```
+
+    ## # A tibble: 336 × 11
+    ##    address.x     city.x state zip.x longi…¹ latit…² addre…³ city.y zip.y longi…⁴
+    ##    <chr>         <chr>  <chr> <chr>   <dbl>   <dbl> <chr>   <chr>  <chr>   <dbl>
+    ##  1 1 Regent Par… Ashev… NC    28806   -82.6    35.6 165 Hw… "\nBo… 28607   -81.7
+    ##  2 1 Regent Par… Ashev… NC    28806   -82.6    35.6 3127 S… "\nCh… 28208   -80.9
+    ##  3 1 Regent Par… Ashev… NC    28806   -82.6    35.6 4900 S… "\nCh… 28217   -80.9
+    ##  4 1 Regent Par… Ashev… NC    28806   -82.6    35.6 4414 D… "\nDu… 27707   -79.0
+    ##  5 1 Regent Par… Ashev… NC    28806   -82.6    35.6 1910 W… "\nDu… 27713   -78.9
+    ##  6 1 Regent Par… Ashev… NC    28806   -82.6    35.6 1201 L… "\nGr… 27407   -79.9
+    ##  7 1 Regent Par… Ashev… NC    28806   -82.6    35.6 1607 F… "\nCo… 28613   -81.3
+    ##  8 1 Regent Par… Ashev… NC    28806   -82.6    35.6 191 Cr… "\nCa… 27518   -78.8
+    ##  9 1 Regent Par… Ashev… NC    28806   -82.6    35.6 2211 S… "\nRa… 27612   -78.7
+    ## 10 1 Regent Par… Ashev… NC    28806   -82.6    35.6 1001 A… "\nMo… 27560   -78.8
+    ## # … with 326 more rows, 1 more variable: latitude.y <dbl>, and abbreviated
+    ## #   variable names ¹​longitude.x, ²​latitude.x, ³​address.y, ⁴​longitude.y
+
+``` r
+dn_lq_nc <- dn_lq_nc %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_nc_mindist <- dn_lq_nc %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_nc_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NC: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 28 Denny's-La Quinta pairings within 200 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](lab-05_files/figure-gfm/nc_graph-1.png)<!-- -->
+
+``` r
+summary(dn_lq_nc_mindist)
+```
+
+    ##   address.x            closest       
+    ##  Length:28          Min.   :  1.779  
+    ##  Class :character   1st Qu.: 22.388  
+    ##  Mode  :character   Median : 53.456  
+    ##                     Mean   : 65.444  
+    ##                     3rd Qu.: 93.985  
+    ##                     Max.   :187.935
+
+### Exercise 10
+
+``` r
+dn_tx <- dennys %>%
+  filter(state == "TX")
+
+lq_tx <- laquinta %>%
+  filter(state == "TX")
+
+dn_lq_tx <- full_join(dn_tx, lq_tx, by = "state")
+dn_lq_tx
+```
+
+    ## # A tibble: 47,400 × 11
+    ##    address.x     city.x state zip.x longi…¹ latit…² addre…³ city.y zip.y longi…⁴
+    ##    <chr>         <chr>  <chr> <chr>   <dbl>   <dbl> <chr>   <chr>  <chr>   <dbl>
+    ##  1 120 East I-20 Abile… TX    79601   -99.6    32.4 3018 C… "\nAb… 79606   -99.8
+    ##  2 120 East I-20 Abile… TX    79601   -99.6    32.4 3501 W… "\nAb… 79601   -99.7
+    ##  3 120 East I-20 Abile… TX    79601   -99.6    32.4 14925 … "\nAd… 75254   -96.8
+    ##  4 120 East I-20 Abile… TX    79601   -99.6    32.4 909 Ea… "\nAl… 78516   -98.1
+    ##  5 120 East I-20 Abile… TX    79601   -99.6    32.4 2400 E… "\nAl… 78332   -98.0
+    ##  6 120 East I-20 Abile… TX    79601   -99.6    32.4 1220 N… "\nAl… 75013   -96.7
+    ##  7 120 East I-20 Abile… TX    79601   -99.6    32.4 1165 H… "\nAl… 76009   -97.2
+    ##  8 120 East I-20 Abile… TX    79601   -99.6    32.4 880 So… "\nAl… 77511   -95.2
+    ##  9 120 East I-20 Abile… TX    79601   -99.6    32.4 1708 I… "\nAm… 79103  -102. 
+    ## 10 120 East I-20 Abile… TX    79601   -99.6    32.4 9305 E… "\nAm… 79118  -102. 
+    ## # … with 47,390 more rows, 1 more variable: latitude.y <dbl>, and abbreviated
+    ## #   variable names ¹​longitude.x, ²​latitude.x, ³​address.y, ⁴​longitude.y
+
+``` r
+dn_lq_tx <- dn_lq_tx %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_tx_mindist <- dn_lq_tx %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_tx_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("TX: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 200 Denny's-La Quinta pairings within 60 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](lab-05_files/figure-gfm/tx_graph-1.png)<!-- -->
+
+``` r
+summary(dn_lq_tx_mindist)
+```
+
+    ##   address.x            closest       
+    ##  Length:200         Min.   : 0.0160  
+    ##  Class :character   1st Qu.: 0.7305  
+    ##  Mode  :character   Median : 3.3715  
+    ##                     Mean   : 5.7918  
+    ##                     3rd Qu.: 6.6303  
+    ##                     Max.   :60.5820

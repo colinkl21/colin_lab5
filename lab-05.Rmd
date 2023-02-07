@@ -121,7 +121,7 @@ dn_lq_ak_mindist <- dn_lq_ak %>%
 library(ggsci)
 
 ggplot(data = dn_lq_ak_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are three different La Quinta within 6 miles of three different Denny's") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 3 Denny's-La Quinta pairings within 6 miles") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -133,8 +133,66 @@ summary(dn_lq_ak_mindist)
 
 ### Exercise 9
 
-```{r}
+```{r nc_graph}
 
+dn_nc <- dennys %>%
+  filter(state == "NC")
+
+lq_nc <- laquinta %>%
+  filter(state == "NC")
+
+dn_lq_nc <- full_join(dn_nc, lq_nc, by = "state")
+dn_lq_nc
+
+dn_lq_nc <- dn_lq_nc %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_nc_mindist <- dn_lq_nc %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_nc_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NC: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 28 Denny's-La Quinta pairings within 200 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+
+summary(dn_lq_nc_mindist)
+
+```
+
+
+### Exercise 10
+
+```{r tx_graph}
+
+dn_tx <- dennys %>%
+  filter(state == "TX")
+
+lq_tx <- laquinta %>%
+  filter(state == "TX")
+
+dn_lq_tx <- full_join(dn_tx, lq_tx, by = "state")
+dn_lq_tx
+
+dn_lq_tx <- dn_lq_tx %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_tx_mindist <- dn_lq_tx %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_tx_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("TX: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 200 Denny's-La Quinta pairings within 60 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+
+summary(dn_lq_tx_mindist)
 
 
 ```
