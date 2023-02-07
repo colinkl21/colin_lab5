@@ -121,7 +121,7 @@ dn_lq_ak_mindist <- dn_lq_ak %>%
 library(ggsci)
 
 ggplot(data = dn_lq_ak_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 3 Denny's-La Quinta pairings within 6 miles") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (km)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 3 Denny's-La Quinta pairings within 6 km") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -153,7 +153,7 @@ dn_lq_nc_mindist <- dn_lq_nc %>%
 
 
 ggplot(data = dn_lq_nc_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NC: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 28 Denny's-La Quinta pairings within 200 miles") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (km)") + ylab("Number of Establishments") + ggtitle("NC: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 28 Denny's-La Quinta pairings within 200 km") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -186,7 +186,7 @@ dn_lq_tx_mindist <- dn_lq_tx %>%
 
 
 ggplot(data = dn_lq_tx_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("TX: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 200 Denny's-La Quinta pairings within 60 miles") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (km)") + ylab("Number of Establishments") + ggtitle("TX: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 200 Denny's-La Quinta pairings within 60 km") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -219,7 +219,7 @@ dn_lq_ny_mindist <- dn_lq_ny %>%
 
 
 ggplot(data = dn_lq_ny_mindist, 
-       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NY: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 56 Denny's-La Quinta pairings within 100 miles") +
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (km)") + ylab("Number of Establishments") + ggtitle("NY: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 56 Denny's-La Quinta pairings within 100 km") +
   theme(
   panel.background = element_rect(fill = NA),
   panel.grid.major = element_line(colour = "grey"),
@@ -231,4 +231,4 @@ summary(dn_lq_ny_mindist)
 
 ### Exercise 12
 
-Mitch Hedberg’s joke is most likely true in Texas, given that there are 200 pairings with in 60 miles
+Mitch Hedberg’s joke is most likely true in Texas, given that there are 200 pairings within 60 km
