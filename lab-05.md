@@ -280,3 +280,70 @@ summary(dn_lq_tx_mindist)
     ##                     Mean   : 5.7918  
     ##                     3rd Qu.: 6.6303  
     ##                     Max.   :60.5820
+
+### Exercise 11
+
+``` r
+dn_ny <- dennys %>%
+  filter(state == "NY")
+
+lq_ny <- laquinta %>%
+  filter(state == "NY")
+
+dn_lq_ny <- full_join(dn_ny, lq_ny, by = "state")
+dn_lq_ny
+```
+
+    ## # A tibble: 1,064 × 11
+    ##    address.x     city.x state zip.x longi…¹ latit…² addre…³ city.y zip.y longi…⁴
+    ##    <chr>         <chr>  <chr> <chr>   <dbl>   <dbl> <chr>   <chr>  <chr>   <dbl>
+    ##  1 114 Wolf Road Albany NY    12205   -73.8    42.7 94 Bus… "\nAr… 10504   -73.7
+    ##  2 114 Wolf Road Albany NY    12205   -73.8    42.7 8200 P… "\nBa… 14020   -78.2
+    ##  3 114 Wolf Road Albany NY    12205   -73.8    42.7 581 Ha… "\nJo… 13790   -76.0
+    ##  4 114 Wolf Road Albany NY    12205   -73.8    42.7 1229 A… "\nBr… 11216   -74.0
+    ##  5 114 Wolf Road Albany NY    12205   -73.8    42.7 533 3r… "\nBr… 11215   -74.0
+    ##  6 114 Wolf Road Albany NY    12205   -73.8    42.7 1412 P… "\nBr… 11233   -73.9
+    ##  7 114 Wolf Road Albany NY    12205   -73.8    42.7 6619 T… "\nWi… 14221   -78.7
+    ##  8 114 Wolf Road Albany NY    12205   -73.8    42.7 1749 R… "\nCl… 12065   -73.8
+    ##  9 114 Wolf Road Albany NY    12205   -73.8    42.7 540 Sa… "\nEl… 10523   -73.8
+    ## 10 114 Wolf Road Albany NY    12205   -73.8    42.7 4317 R… "\nFa… 11692   -73.8
+    ## # … with 1,054 more rows, 1 more variable: latitude.y <dbl>, and abbreviated
+    ## #   variable names ¹​longitude.x, ²​latitude.x, ³​address.y, ⁴​longitude.y
+
+``` r
+dn_lq_ny <- dn_lq_ny %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_ny_mindist <- dn_lq_ny %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_ny_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NY: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 56 Denny's-La Quinta pairings within 100 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](lab-05_files/figure-gfm/ny_graph-1.png)<!-- -->
+
+``` r
+summary(dn_lq_ny_mindist)
+```
+
+    ##   address.x            closest      
+    ##  Length:56          Min.   : 1.281  
+    ##  Class :character   1st Qu.: 7.381  
+    ##  Mode  :character   Median :24.158  
+    ##                     Mean   :33.575  
+    ##                     3rd Qu.:53.265  
+    ##                     Max.   :99.044
+
+### Exercise 12
+
+Mitch Hedberg’s joke is most likely true in Texas, given that there are
+200 pairings with in 60 miles

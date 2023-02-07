@@ -197,3 +197,38 @@ summary(dn_lq_tx_mindist)
 
 ```
 
+### Exercise 11
+
+```{r ny_graph}
+
+dn_ny <- dennys %>%
+  filter(state == "NY")
+
+lq_ny <- laquinta %>%
+  filter(state == "NY")
+
+dn_lq_ny <- full_join(dn_ny, lq_ny, by = "state")
+dn_lq_ny
+
+dn_lq_ny <- dn_lq_ny %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+dn_lq_ny_mindist <- dn_lq_ny %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+
+ggplot(data = dn_lq_ny_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("NY: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are 56 Denny's-La Quinta pairings within 100 miles") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+
+summary(dn_lq_ny_mindist)
+
+```
+
+### Exercise 12
+
+Mitch Hedberg’s joke is most likely true in Texas, given that there are 200 pairings with in 60 miles
