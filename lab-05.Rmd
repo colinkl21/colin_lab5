@@ -1,7 +1,7 @@
 ---
 title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 2"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Colin Li"
+date: "02/07/2023"
 output: github_document
 ---
 
@@ -18,32 +18,124 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r}
+
+dn_ak <- dennys %>%
+  filter(state == "AK")
+nrow(dn_ak)
+
+```
+
+How many Denny’s locations are there in Alaska?
+3 locations
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r}
+
+lq_ak <- laquinta %>%
+  filter(state == "AK")
+nrow(lq_ak)
+
+```
+How many La Quinta locations are there in Alaska?
+
+2 locations
 
 ### Exercise 3
+
+```{r}
+
+dn_lq_ak <- full_join(dn_ak, lq_ak, by = "state")
+dn_lq_ak
+
+
+```
 
 ...
 
 ### Exercise 4
 
+
+```{r}
+
+glimpse(dn_lq_ak)
+
+```
+How many observations are in the joined dn_lq_ak data frame? What are the names of the variables in this data frame.
+
+6 observations, names are address.x, city.x, state, zip.x, longitude.x, latitude.x, country.x, establishment.x, address.y, city.y, zip.y, longitude.y, latitude.y, country.y, establishment.y
+
+
 ...
 
 ### Exercise 5
+
+```{r}
+
+haversine <- function(long1, lat1, long2, lat2, round = 3) {
+  # convert to radians
+  long1 = long1 * pi / 180
+  lat1  = lat1  * pi / 180
+  long2 = long2 * pi / 180
+  lat2  = lat2  * pi / 180
+  
+  R = 6371 # Earth mean radius in km
+  
+  a = sin((lat2 - lat1)/2)^2 + cos(lat1) * cos(lat2) * sin((long2 - long1)/2)^2
+  d = R * 2 * asin(sqrt(a))
+  
+  return( round(d,round) ) # distance in km
+}
+
+```
+
 
 ...
 
 ### Exercise 6
 
+```{r}
+
+dn_lq_ak <- dn_lq_ak %>%
+  mutate(distance = haversine(long1 = longitude.x, lat1 = latitude.x, long2 = longitude.y, lat2 = latitude.y))
+
+```
+
+
 ...
 
-Add exercise headings as needed.
+### Exercise 7
+
+```{r}
+
+dn_lq_ak_mindist <- dn_lq_ak %>%
+  dplyr::group_by(address.x) %>%
+  dplyr::summarize(closest = min(distance))
+
+```
+
+### Exercise 8
+
+```{r}
+library(ggsci)
+
+ggplot(data = dn_lq_ak_mindist, 
+       mapping = aes(x = closest, color = " ", show.legend = FALSE)) + scale_color_aaas() + geom_freqpoly() + scale_y_continuous(breaks = c(0, 1, 2)) + scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6)) + xlab("Distance (miles)") + ylab("Number of Establishments") + ggtitle("AK: Distances between Denny’s and the Nearest La Quinta") + labs(caption = "There are three different La Quinta within 6 miles of three different Denny's") +
+  theme(
+  panel.background = element_rect(fill = NA),
+  panel.grid.major = element_line(colour = "grey"),
+) 
+
+summary(dn_lq_ak_mindist)
+
+```
+
+### Exercise 9
+
+```{r}
+
+
+
+```
+
